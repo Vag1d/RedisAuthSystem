@@ -80,3 +80,17 @@ sudo apt install redis-server
 sudo systemctl start redis
 redis-cli ping
 ```
+
+
+## Запуск Тестов
+
+```bash
+pytest tests/ -v
+```
+
+
+## Примеры запросов 
+
+```bash
+./examples.sh
+```

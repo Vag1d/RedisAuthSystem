@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import uuid
 from jose import jwt
 from passlib.context import CryptContext
 from app.config import (
@@ -21,15 +22,27 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire, "type": "access"})
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({
+        "exp": expire,
+        "iat": now,
+        "type": "access"
+    })
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
-    to_encode.update({"exp": expire, "type": "refresh"})
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    # Добавляем уникальный идентификатор токена
+    to_encode.update({
+        "exp": expire,
+        "iat": now,
+        "type": "refresh",
+        "jti": uuid.uuid4().hex   # гарантирует уникальность
+    })
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
