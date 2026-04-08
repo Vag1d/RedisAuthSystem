@@ -54,7 +54,11 @@ Refresh-токен хранится в Redis с ключом refresh: username.
 - Рекомендуется также использовать **HttpOnly Secure Cookies** для хранения токенов (защита от XSS).
 
 ## Запуск проекта
-
+### Создать файл .env
+```file
+REDIS_URL=redis://redis:6379/0
+SECRET_KEY=secretkey
+```
 ### 1. Запуск с Docker 
 
 ```bash
